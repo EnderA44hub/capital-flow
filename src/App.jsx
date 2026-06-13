@@ -159,7 +159,7 @@ export default function App(){
   const [detailBase,setDetailBase]=useState("SPY");
 
   useEffect(()=>{
-    fetch("data/prices.json")
+    fetch("./data/prices.json")
       .then(r=>r.json())
       .then(d=>{setPrices(d.prices);setAssets(d.assets);setUpdatedAt(d.updated_at);setLoading(false);})
       .catch(e=>{setError(e.message);setLoading(false);});

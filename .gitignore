@@ -4,3 +4,6 @@ dist/
 __pycache__/
 *.pyc
 .env
+
+# Keep prices
+!public/data/prices.json
