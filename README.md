@@ -1,6 +1,6 @@
-# Capital Flow · Donchian 55d
+# Capital Flow · 
 
-Dashboard para visualizar el flujo de capital entre activos globales usando ratios relativos y canal Donchian de 55 días sobre High/Low.
+
 
 ## Estructura
 
