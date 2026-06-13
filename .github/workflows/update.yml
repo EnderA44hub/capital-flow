@@ -1,0 +1,50 @@
+name: Actualizar Precios Diario
+
+on:
+  schedule:
+    # Lunes a viernes a las 23:00 UTC (6pm Colombia / 7pm EST)
+    # Mercados USA cierran a las 4pm EST — datos listos a las 6pm
+    - cron: "0 23 * * 1-5"
+  workflow_dispatch: # permite correr manualmente desde GitHub
+
+jobs:
+  fetch-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias Python
+        run: pip install yfinance
+
+      - name: Descargar precios
+        run: python fetch_data.py
+
+      - name: Copiar prices.json a public/
+        run: cp data/prices.json public/data/prices.json
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Instalar dependencias Node
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy a GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
