@@ -1,83 +1,59 @@
-# Capital Flow · 
+# Capital Flow
 
+Tracks capital rotation across macro assets using ratio analysis. Deployed as a live web app via GitHub Pages, updated automatically every trading day.
 
+## Structure
 
-## Estructura
-
-```
 capital-flow/
-├── fetch_data.py          # Descarga precios de Yahoo Finance
-├── requirements.txt       # Dependencias Python
+├── fetch_data.py
+├── requirements.txt
 ├── src/
-│   ├── App.jsx            # App React con datos reales
-│   └── main.jsx           # Entry point
+│   ├── App.jsx
+│   └── main.jsx
 ├── public/
 │   └── data/
-│       └── prices.json    # Generado por fetch_data.py
+│       └── prices.json
 ├── index.html
 ├── package.json
 ├── vite.config.js
 └── .github/
     └── workflows/
-        └── update.yml     # Cron diario: fetch + build + deploy
-```
+        └── update.yml
 
-## Setup local
+## Local Setup
 
-### 1. Instalar dependencias
-
-```bash
 # Python
 pip install -r requirements.txt
 
 # Node
 npm install
-```
 
-### 2. Descargar precios
-
-```bash
+# Download prices
 python fetch_data.py
-```
 
-Genera `data/prices.json` con 1 año de OHLC para todos los activos.
-
-### 3. Copiar data a public y correr app
-
-```bash
+# Copy data and run app
 cp data/prices.json public/data/prices.json
 npm run dev
-```
 
-Abre http://localhost:5173
+Open http://localhost:5173
 
-## Deploy en GitHub Pages
+## Deploy on GitHub Pages
 
-### 1. Crear repositorio en GitHub y subir código
-
-```bash
 git init
 git add .
 git commit -m "initial commit"
-git remote add origin https://github.com/TU_USUARIO/capital-flow.git
+git remote add origin https://github.com/EnderA44hub/capital-flow.git
 git push -u origin main
-```
 
-### 2. Activar GitHub Pages
+Then go to Settings → Pages → Source: GitHub Actions.
 
-- Ir a Settings → Pages
-- Source: **GitHub Actions**
+The workflow runs automatically Monday to Friday at 23:00 UTC.
+Can also be triggered manually from Actions → "Update Daily Prices" → Run workflow.
 
-### 3. El workflow corre automáticamente
+## Logic
 
-- Lunes a viernes a las 23:00 UTC (6pm Colombia)
-- Descarga precios → build → deploy
-- También puedes correrlo manualmente desde Actions → "Actualizar Precios Diario" → Run workflow
-
-## Lógica
-
-- **Ratio** = precio(A) / precio(B) usando mid = (High+Low)/2
-- **Canal Donchian 55d** = max(High ratio, 55d) y min(Low ratio, 55d) dinámico
-- **Fluye hacia** = ratio creciente en 55d
-- **Sale de** = ratio decreciente en 55d
-- **Ranking Global** = cada activo vs todos los demás (victorias / total)
+- Ratio = price(A) / price(B) using mid = (High + Low) / 2
+- Donchian Channel 55d = max(High ratio, 55d) and min(Low ratio, 55d)
+- Flowing into = ratio rising over 55 days
+- Flowing out of = ratio falling over 55 days
+- Global Ranking = each asset vs all others (wins / total comparisons)
