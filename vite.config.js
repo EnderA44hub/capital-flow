@@ -3,6 +3,5 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  // Sirve data/prices.json como archivo estático
-  publicDir: "public",
+  base: "/capital-flow/",
 });
